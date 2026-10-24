@@ -76,8 +76,8 @@ footer{margin-top:60px;color:var(--muted);font-size:.88rem;border-top:1px solid 
   :root{--paper:#ffffff;--surface:#ffffff}
   body{font-size:11pt}
   .copy button,.noprint{display:none!important}
-  h2{break-before:page;margin-top:0}
-  h2.first{break-before:auto}
+  h2{break-after:avoid;margin-top:28px}
+
   .node,.need div,pre,table,.note{break-inside:avoid}
   a{color:var(--ink);text-decoration:none}
 }
@@ -150,7 +150,7 @@ footer{margin-top:60px;color:var(--muted);font-size:.88rem;border-top:1px solid 
   <li>Set your time zone, or the brief arrives at the wrong hour: click your avatar (bottom left) › <b>Profile</b> › <b>Time zone</b> › <b>Asia/Dubai</b> (or yours) › <b>Save changes</b>.</li>
   <li>Go to <b>Scenarios</b> › <b>Create a new scenario</b>.</li>
 </ol>
-<div class="note ok"><b>Shortcut:</b> instead of adding each node by hand, download <a href="daily-brief-lite.blueprint.json">daily-brief-lite.blueprint.json</a>, then in the empty scenario click <b>⋯</b> (bottom toolbar) › <b>Import Blueprint</b> › choose the file › <b>Save</b>. All six nodes appear with their settings. You still need to do the parts marked <b>You choose</b> below: your connections, your sheet and your channel.</div>
+<div class="note ok"><b>Shortcut:</b> instead of adding each node by hand, download <a href="https://philipviegas84-svg.github.io/vidacruz/guide/daily-brief-lite.blueprint.json" download>daily-brief-lite.blueprint.json</a> (right-click › Save link as, if it opens as text), then in the empty scenario click <b>⋯</b> (bottom toolbar) › <b>Import Blueprint</b> › choose the file › <b>Save</b>. All six nodes appear with their settings. You still need to do the parts marked <b>You choose</b> below: your connections, your sheet and your channel.</div>
 
 <h2>Part 5 · The scenario, node by node</h2>
 <p>Add each node with the big <b>+</b> (or the small + to the right of the last node), search for the app, pick the action, then fill the fields exactly as shown. Text in <span class="mono">{{ }}</span> is a value from an earlier node: click into the field and pick it from the panel that opens (the number is the node's number in your scenario).</p>
@@ -159,9 +159,8 @@ footer{margin-top:60px;color:var(--muted);font-size:.88rem;border-top:1px solid 
   <header><span class="n">1</span><div><h3>Google Sheets › Get Range Values</h3><span class="app">Reads the ready-made brief lines from your sheet</span></div></header>
   <div class="tbl"><table><thead><tr><th>Field</th><th>What to enter</th></tr></thead><tbody>
     <tr><td>Connection</td><td><b>You choose:</b> click <b>Create a connection</b> › <b>Sign in with Google</b> › allow access.</td></tr>
-    <tr><td>Search Method</td><td>Search by path</td></tr>
-    <tr><td>Drive</td><td>My Drive</td></tr>
-    <tr><td>Spreadsheet</td><td><b>You choose:</b> My Portfolio</td></tr>
+    <tr><td>Search Method</td><td>Enter manually</td></tr>
+    <tr><td>Spreadsheet ID</td><td><b>You choose:</b> the long code in your sheet's web address, between <span class="mono">/d/</span> and <span class="mono">/edit</span>. Example: <span class="mono">docs.google.com/spreadsheets/d/<b>1AbC…xYz</b>/edit</span></td></tr>
     <tr><td>Sheet Name</td><td>Portfolio</td></tr>
     <tr><td>Range</td><td><span class="mono">K2:K14</span></td></tr>
     <tr><td>Table contains headers</td><td>No</td></tr>
@@ -201,7 +200,7 @@ footer{margin-top:60px;color:var(--muted);font-size:.88rem;border-top:1px solid 
   <header><span class="n">5</span><div><h3>Google Gemini AI › Generate a response</h3><span class="app">Writes your brief from the numbers and headlines</span></div></header>
   <div class="tbl"><table><thead><tr><th>Field</th><th>What to enter</th></tr></thead><tbody>
     <tr><td>Connection</td><td><b>You choose:</b> <b>Create a connection</b> › paste your Gemini API key › <b>Save</b>.</td></tr>
-    <tr><td>AI Model</td><td>[[MODEL]]</td></tr>
+    <tr><td>AI Model</td><td>Gemini Flash Latest <span class="mono">gemini-flash-latest</span> (it moves to Google's newest Flash model by itself, so it never gets retired)</td></tr>
     <tr><td>Messages › Add item</td><td>Role: <b>User</b> · Parts › Add item › Message Type: <b>Text</b> · Text: the prompt below</td></tr>
   </tbody></table></div>
   <div class="copy"><button type="button" data-copy="prompt">Copy</button><pre id="prompt">You are my morning market assistant. Today is {{formatDate(now; "dddd D MMMM YYYY"; "Asia/Dubai")}}.
@@ -229,11 +228,21 @@ TODAY'S HEADLINES:
     <tr><td>Connection</td><td><b>You choose:</b> <b>Create a connection</b> › sign in to your workspace › <b>Allow</b>.</td></tr>
     <tr><td>Enter a channel ID or name</td><td>Enter manually</td></tr>
     <tr><td>Channel ID or name</td><td><span class="mono">#daily-brief</span></td></tr>
-    <tr><td>Text</td><td><span class="mono">[[GEMINI_TEXT]]</span> (from node 5)</td></tr>
+    <tr><td>Text</td><td>From node 5, open <b>Candidates › Content › Parts</b> and click <b>Text</b>. It reads <span class="mono">{{5.candidates[1].content.parts[1].text}}</span>.</td></tr>
   </tbody></table></div>
 </section>
 
 <h2>Part 6 · Test it, then schedule it</h2>
+<p>This is the message our reference build posted when we tested this guide on 24 October 2026, using the example holdings in the template:</p>
+<pre>☀️ *Good morning. Portfolio AED 52,922* (today AED -155)
+• Best holding: NSE:INFY (+0.0%), Worst holding: NASDAQ:NVDA (-0.6%)
+• FIRE progress: 1.2% of your FIRE number AED 4,500,000
+
+📰 *Markets*:
+• AI pixie dust is losing its stock market power - Axios
+• New York stock market closes week lower - Anadolu Ajansı
+
+_Not financial advice._</pre>
 <ol class="steps">
   <li>Click <b>Save</b> (the disk icon), then <b>Run once</b>. Each node shows a bubble with a number when it worked.</li>
   <li>Check Slack: the brief should be in <b>#daily-brief</b> within a few seconds.</li>

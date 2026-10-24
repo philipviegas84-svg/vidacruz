@@ -1,0 +1,101 @@
+{
+  "name": "Daily Brief Lite (VidaCruz AI free kit)",
+  "metadata": {
+    "instant": false,
+    "version": 1
+  },
+  "flow": [
+    {
+      "id": 1,
+      "module": "google-sheets:getSheetContent",
+      "version": 2,
+      "parameters": {},
+      "mapper": {
+        "select": "map",
+        "spreadsheetId": "PASTE-YOUR-SHEET-ID-HERE",
+        "sheetId": "Portfolio",
+        "range": "K2:K14",
+        "includesHeaders": false
+      }
+    },
+    {
+      "id": 2,
+      "module": "util:TextAggregator",
+      "version": 1,
+      "parameters": {
+        "feeder": 1,
+        "rowSeparator": "\n"
+      },
+      "filter": {
+        "name": "Only filled rows",
+        "conditions": [
+          [
+            {
+              "a": "{{1.`0`}}",
+              "o": "exist"
+            }
+          ]
+        ]
+      },
+      "mapper": {
+        "value": "{{1.`0`}}"
+      }
+    },
+    {
+      "id": 3,
+      "module": "rss:ActionReadArticles",
+      "version": 4,
+      "parameters": {},
+      "mapper": {
+        "url": "https://news.google.com/rss/search?q=stock+market+OR+oil+OR+bitcoin+when:1d&hl=en-AE&gl=AE&ceid=AE:en",
+        "maxResults": 8,
+        "gzip": true
+      }
+    },
+    {
+      "id": 4,
+      "module": "util:TextAggregator",
+      "version": 1,
+      "parameters": {
+        "feeder": 3,
+        "rowSeparator": "\n"
+      },
+      "mapper": {
+        "value": "- {{3.title}}"
+      }
+    },
+    {
+      "id": 5,
+      "module": "gemini-ai:createACompletionGeminiPro",
+      "version": 1,
+      "parameters": {},
+      "mapper": {
+        "model": "gemini-flash-latest",
+        "contents": [
+          {
+            "role": "user",
+            "parts": [
+              {
+                "type": "text",
+                "text": "You are my morning market assistant. Today is {{formatDate(now; \"dddd D MMMM YYYY\"; \"Asia/Dubai\")}}.\n\nWrite my Daily Brief for Slack using ONLY the facts below. Never invent numbers, prices or news, and never calculate new numbers.\n\nFormat (Slack formatting: *bold* with single asterisks, bullets with •, no tables, under 150 words):\n☀️ *Good morning. Portfolio AED [value]* and today's change in AED, from the PORTFOLIO TOTAL line.\n• Best and worst holding today, with their move.\n• My FIRE progress line, if there is one.\n📰 *Markets*: 2 or 3 bullets from the headlines that matter most for my holdings. If none matter, say \"No big news for your holdings.\"\nLast line, in italics: Not financial advice.\n\nMY PORTFOLIO:\n{{2.text}}\n\nTODAY'S HEADLINES:\n{{4.text}}"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": 6,
+      "module": "slack:CreateMessage",
+      "version": 4,
+      "parameters": {},
+      "mapper": {
+        "channelWType": "manualy",
+        "channel": "#daily-brief",
+        "text": "{{5.candidates[1].content.parts[1].text}}",
+        "parse": false,
+        "mrkdwn": true
+      }
+    }
+  ]
+}

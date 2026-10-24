@@ -1,0 +1,29 @@
+name: Test waitlist form
+# Sends one test sign-up to the Make webhook and checks the reply, exactly like a browser on the site would.
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Post a test sign-up
+        run: |
+          curl -sS -D headers.txt -o body.txt -X POST "https://hook.us2.make.com/2g87dm31f514monoqyukcxg9l2pe4j68" \
+            -H "Origin: https://philipviegas84-svg.github.io" \
+            --data-urlencode "submitted_at=$(date -u +%FT%TZ)" \
+            --data-urlencode "name=TEST - Claude (delete me)" \
+            --data-urlencode "email=test@example.com" \
+            --data-urlencode "country=United Arab Emirates" \
+            --data-urlencode "plan=DIY kits" \
+            --data-urlencode "would_pay=AED 50-150" \
+            --data-urlencode "bundle_pref=One by one" \
+            --data-urlencode "channel=Slack (I use it)" \
+            --data-urlencode "heard_from=The Daily Edge (YouTube)" \
+            --data-urlencode "message=automated test" \
+            --data-urlencode "agents=Daily Brief Lite, FX & Remittance Alerts" \
+            --data-urlencode "fire_years=28.4" \
+            --data-urlencode "consent=yes" \
+            --data-urlencode "website=" \
+            --data-urlencode "page=test"
+          echo "--- headers"; cat headers.txt; echo "--- body"; cat body.txt
+          grep -qi "access-control-allow-origin: \*" headers.txt

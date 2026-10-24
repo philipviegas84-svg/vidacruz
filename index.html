@@ -267,7 +267,7 @@ footer .brand{margin-bottom:8px}
       <a href="#fire">FIRE calculator</a>
       <a href="#agents">Agents</a>
       <a href="#pricing">Pricing</a>
-      <a href="#early">Early access</a>
+      <a href="#early">Daily Brief Pro</a>
       <a class="btn btn-primary btn-sm" href="#waitlist">Join the waitlist</a>
     </nav>
   </div>
@@ -310,21 +310,21 @@ footer .brand{margin-bottom:8px}
 <section id="early">
   <div class="wrap ea">
     <div>
-      <span class="eyebrow">Early access · first 10 people</span>
+      <span class="eyebrow">Daily Brief Pro · waitlist open</span>
       <h2>Daily Brief Pro, with your FIRE number in Slack every morning</h2>
       <p class="lead">Your whole portfolio in your own currency, how close you are to financial independence, stop-loss, target and buy-zone alerts, and the news behind your moves. It runs on Make's free plan.</p>
-      <div class="ea-price"><b>AED 49</b><s>AED 75</s><span>Early-access price</span></div>
+      <div class="ea-price"><b>AED 49</b><s>AED 75</s><span>For the first 10 on the waitlist</span></div>
       <ul class="gets">
         <li>The step-by-step kit: guide, Make import files and your own portfolio sheet with the engine inside</li>
         <li>Works with US, UAE, India, crypto and London holdings</li>
         <li>Personal help from Philip if you get stuck during setup</li>
-        <li>In return: 10 minutes of honest feedback once it's running</li>
+        <li>The first 10 on the waitlist get AED 49 instead of AED 75, in return for 10 minutes of honest feedback</li>
       </ul>
       <p class="fine">Educational tool only, not financial advice. Your tools (Make, Slack, Gemini, Google) stay on free plans; you sign up for them yourself.</p>
     </div>
     <div>
       <form id="eaForm" class="panel" novalidate>
-        <h3 style="margin:0 0 14px">Reserve your place</h3>
+        <h3 style="margin:0 0 14px">Join the Daily Brief Pro waitlist</h3>
         <div class="fields">
           <div class="field"><label for="e_name">Name</label><input class="txt" id="e_name" autocomplete="name" required></div>
           <div class="field"><label for="e_email">Email</label><input class="txt" id="e_email" type="email" autocomplete="email" required></div>
@@ -334,14 +334,14 @@ footer .brand{margin-bottom:8px}
             <select id="e_slack"><option>Yes</option><option>No, but I'll set it up</option><option>I'd prefer WhatsApp or email</option></select></div>
           <div class="field full"><label for="e_hold">What do you hold? <span class="hint">(optional, helps us help you)</span></label><input class="txt" id="e_hold" placeholder="e.g. US ETFs, Emaar, a little bitcoin"></div>
           <div class="hp" aria-hidden="true"><label for="e_web">Website</label><input id="e_web" tabindex="-1" autocomplete="off"></div>
-          <label class="consent full"><input type="checkbox" id="e_ok" required> I agree that VidaCruz AI may email me about my early-access place. I can unsubscribe any time.</label>
-          <div class="full"><button class="btn btn-primary" type="submit" id="e_btn">Reserve my place</button></div>
+          <label class="consent full"><input type="checkbox" id="e_ok" required> I agree that VidaCruz AI may email me about the Daily Brief Pro waitlist. I can unsubscribe any time.</label>
+          <div class="full"><button class="btn btn-primary" type="submit" id="e_btn">Join the waitlist</button></div>
           <p class="error full" id="e_err" role="alert" hidden></p>
         </div>
       </form>
       <div class="done" id="eaDone" hidden>
-        <h3>Your place is reserved 🎉</h3>
-        <p id="eaNext">Thank you. We'll email you within 24 hours to confirm your place and the next steps. Nothing to pay today.</p>
+        <h3>You're on the waitlist 🎉</h3>
+        <p id="eaNext">Thank you. We'll email you as soon as Daily Brief Pro opens. If you're one of the first 10, you'll get it for AED 49. Nothing to pay today.</p>
         <div class="cta-row" id="eaPayRow" hidden><a class="btn btn-primary" id="eaPay" href="#" target="_blank" rel="noopener">Pay AED 49 now</a></div>
       </div>
     </div>
@@ -681,7 +681,7 @@ function render(filter){
         '<div class="body"><label for="cb_'+a.id+'"><h3>'+a.name+'</h3></label>'+
         '<div class="meta"><span class="tier '+(a.tier==="free"?"free":"")+'">'+TIERNAME[a.tier]+'</span><span>🕗 '+a.when+'</span><span class="mono">≈ '+fmt(a.credits)+' credits/mo</span></div>'+
         '<p>'+a.what+'</p><div class="tools">'+tools+'</div>'+req+'</div>'+
-        '<div class="price">'+(a.price?aed(a.price):"Free")+'<small>'+(a.price?"≈ US$"+Math.round(a.price/FX)+" once":"guide included")+'</small>'+(a.id==="dbp"?'<a class="ea-link" href="#early">Early access AED 49 →</a>':'')+'</div>'+
+        '<div class="price">'+(a.price?aed(a.price):"Free")+'<small>'+(a.price?"≈ US$"+Math.round(a.price/FX)+" once":"guide included")+'</small>'+(a.id==="dbp"?'<a class="ea-link" href="#early">Join the waitlist →</a>':'')+'</div>'+
         '<details class="kit"><summary>Inside the kit: '+a.nodes.length+' nodes</summary><ol>'+a.nodes.map(function(n){return "<li>"+n+"</li>"}).join("")+'</ol></details>'+
       '</article>';
     });
@@ -744,12 +744,12 @@ ea.addEventListener("submit",function(e){
   var name=document.getElementById("e_name").value.trim(),email=document.getElementById("e_email").value.trim();
   if(!name){err.textContent="Please add your name.";err.hidden=false;return;}
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){err.textContent="That email doesn't look right. Check it and try again.";err.hidden=false;return;}
-  if(!document.getElementById("e_ok").checked){err.textContent="Please tick the box so we can email you about your place.";err.hidden=false;return;}
+  if(!document.getElementById("e_ok").checked){err.textContent="Please tick the box so we can email you about the waitlist.";err.hidden=false;return;}
   var d=new URLSearchParams();
   d.append("submitted_at",new Date().toISOString());d.append("name",name);d.append("email",email);
   d.append("country",document.getElementById("e_country").value);
-  d.append("plan","EARLY ACCESS · Daily Brief Pro · AED 49");
-  d.append("would_pay","AED 49 (early access)");d.append("bundle_pref","");
+  d.append("plan","WAITLIST · Daily Brief Pro");
+  d.append("would_pay","AED 49 (first 10) / AED 75");d.append("bundle_pref","");
   d.append("channel",document.getElementById("e_slack").value);
   d.append("heard_from",SRC?("Link: "+SRC):"Website");
   d.append("message","Holds: "+document.getElementById("e_hold").value.trim());
@@ -757,14 +757,14 @@ ea.addEventListener("submit",function(e){
   d.append("fire_years",lastFire?(lastFire.months<0?"70+":(lastFire.months/12).toFixed(1)):"");
   d.append("consent","yes");d.append("website",document.getElementById("e_web").value);
   d.append("page",location.href.split("#")[0]);
-  btn.disabled=true;btn.textContent="Reserving…";
+  btn.disabled=true;btn.textContent="Joining…";
   fetch(HOOK,{method:"POST",body:d,mode:"cors"}).then(function(r){if(!r.ok)throw new Error(r.status);return r.text();})
   .then(function(){
     ea.hidden=true;document.getElementById("eaDone").hidden=false;
     if(PAY_LINK){document.getElementById("eaPay").href=PAY_LINK;document.getElementById("eaPayRow").hidden=false;
       document.getElementById("eaNext").textContent="Pay below to confirm your place. We'll share your kit folder with "+email+" within 24 hours of payment.";}
   })
-  .catch(function(){btn.disabled=false;btn.textContent="Reserve my place";err.textContent="We couldn't save that just now. Check your connection and try again in a minute.";err.hidden=false;});
+  .catch(function(){btn.disabled=false;btn.textContent="Join the waitlist";err.textContent="We couldn't save that just now. Check your connection and try again in a minute.";err.hidden=false;});
 });
 
 /* ---------- Waitlist ---------- */
